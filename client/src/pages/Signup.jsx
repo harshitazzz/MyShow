@@ -20,7 +20,7 @@ const Signup = () => {
     }
     setLoading(true)
     try {
-      const res = await fetch('http://localhost:8080/auth/signup', {
+      const res = await fetch('https://my-show-eta.vercel.app/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username:name , email, password })
@@ -31,6 +31,7 @@ const Signup = () => {
       
       navigate('/')
     } catch (err) {
+      console.log(err);
       setError(err.message)
     } finally {
       setLoading(false)

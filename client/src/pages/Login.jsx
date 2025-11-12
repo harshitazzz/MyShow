@@ -15,7 +15,7 @@ const Login = () => {
     setError(null)
     try {
       // adjust endpoint if your server path differs
-      const res = await fetch('http://localhost:8080/auth/login', {
+      const res = await fetch('https://my-show-eta.vercel.app/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })
