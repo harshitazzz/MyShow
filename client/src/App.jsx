@@ -1,6 +1,9 @@
 import React from 'react'
+import { Routes, Route, useLocation } from 'react-router-dom'
+import { Toaster } from 'react-hot-toast'
+import { AuthProvider } from './context/AuthContext'
 import NavBar from './components/Navbar'
-import {Route, Routes, useLocation} from 'react-router-dom'
+import Footer from './components/Footer'
 import Home from './pages/Home'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
@@ -9,15 +12,15 @@ import MovieDetails from './pages/MovieDetails'
 import SeatLayout from './pages/SeatLayout'
 import MyBookings from './pages/MyBookings'
 import Favourite from './pages/Favourite'
-import {Toaster } from 'react-hot-toast'
-import Footer from './components/Footer'
-const App = () => {
-  const pathname = useLocation().pathname;
-  const isAdminRoute = pathname === '/login' || pathname === '/signup' || pathname.startsWith('/admin')
+
+const Inner = () => {
+  const pathname = useLocation().pathname
+  const hideNav = pathname === '/login' || pathname === '/signup' || pathname.startsWith('/admin')
+
   return (
     <>
-      <Toaster/>
-      {!isAdminRoute && <NavBar/>}
+      <Toaster />
+      {!hideNav && <NavBar />}
       <Routes>
         <Route path='/login' element={<Login/>}/>
         <Route path='/signup' element={<Signup/>}/>
@@ -28,9 +31,15 @@ const App = () => {
         <Route path='/my-bookings' element={<MyBookings/>}/>
         <Route path='/favourite' element={<Favourite/>}/>
       </Routes>
-      {!isAdminRoute && <Footer/>}
+      {!hideNav && <Footer />}
     </>
   )
 }
+
+const App = () => (
+  <AuthProvider>
+      <Inner />
+  </AuthProvider>
+)
 
 export default App

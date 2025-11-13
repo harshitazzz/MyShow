@@ -1,37 +1,30 @@
-// ...existing code...
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { assets } from '../assets/assets'
+import { useAuth } from '../context/AuthContext'
 
 const Signup = () => {
-  const [name, setName] = useState('')
+  const [username, setUsername] = useState('')   // 🔧 changed from name → username
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const { signup } = useAuth()
   const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError(null)
-    if (password.length < 3) {
+    if (password.length < 6) {
       setError('Password must be at least 6 characters')
       return
     }
     setLoading(true)
     try {
-      const res = await fetch('https://my-show-eta.vercel.app/auth/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username:name , email, password })
-      })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.message || 'Signup failed')
-      localStorage.setItem('token', data.token)
-      
+      // 🔧 send 'username' not 'name'
+      await signup({ username, email: email.trim().toLowerCase(), password })
       navigate('/')
     } catch (err) {
-      console.log(err);
       setError(err.message)
     } finally {
       setLoading(false)
@@ -39,7 +32,7 @@ const Signup = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[linear-gradient(180deg,#000000,rgba(0,0,0,0.6))]">
+    <div className="min-h-screen flex items-center justify-center bg-login-gradient">
       <div className="w-full max-w-md bg-white/5 backdrop-blur-md border border-gray-300/10 rounded-xl p-8">
         <div className="flex flex-col items-center gap-4 mb-6">
           <img src={assets.logomy} alt="logo" className="w-28 h-auto"/>
@@ -51,9 +44,9 @@ const Signup = () => {
           <input
             type="text"
             required
-            value={name}
-            onChange={(e)=>setName(e.target.value)}
-            placeholder="Full name"
+            value={username}                         // 🔧 changed
+            onChange={(e)=>setUsername(e.target.value)} // 🔧 changed
+            placeholder="Username"                   // 🔧 changed
             className="px-4 py-3 rounded-md bg-white/5 border border-gray-300/10 text-white placeholder-gray-400"
           />
           <input
@@ -92,4 +85,4 @@ const Signup = () => {
   )
 }
 
-export default Signup;
+export default Signup

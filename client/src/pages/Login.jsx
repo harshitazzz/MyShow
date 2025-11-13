@@ -1,12 +1,14 @@
 import React, { useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { assets } from '../assets/assets'
+import { useAuth } from '../context/AuthContext'
 
 const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const { login } = useAuth()
   const navigate = useNavigate()
 
   const handleSubmit = async (e) => {
@@ -14,17 +16,8 @@ const Login = () => {
     setLoading(true)
     setError(null)
     try {
-      // adjust endpoint if your server path differs
-      const res = await fetch('https://my-show-eta.vercel.app/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      })
-      const data = await res.json()
-      if (!res.ok) throw new Error(data.message || 'Login failed')
-      // store token and navigate (adjust to your state management)
-      localStorage.setItem('token', data.token)
-      navigate('/') // or navigate to dashboard
+      await login({ email: email.trim().toLowerCase(), password })
+      navigate('/')
     } catch (err) {
       setError(err.message)
     } finally {
@@ -33,7 +26,7 @@ const Login = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[linear-gradient(180deg,#000000,rgba(0,0,0,0.6))]">
+    <div className="min-h-screen flex items-center justify-center bg-login-gradient">
       <div className="w-full max-w-md bg-white/5 backdrop-blur-md border border-gray-300/10 rounded-xl p-8">
         <div className="flex flex-col items-center gap-4 mb-6">
           <img src={assets.logomy} alt="logo" className="w-28 h-auto"/>
@@ -78,4 +71,4 @@ const Login = () => {
   )
 }
 
-export default Login;
+export default Login
