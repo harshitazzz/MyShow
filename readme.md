@@ -13,9 +13,9 @@ Backend:Node.js,Express.js
 Database:MongoDB Atlas (or MySQL as alternative)
 Authentication:JWT,OAuth
 Hosting:
-Frontend → Vercel (https://frontend-my-show.vercel.app)
-Backend → Vercel (https://my-show-eta.vercel.app)
-Database → MongoDB Atlas (mongodb+srv://users:HMzzz123@cluster0.vp12ti0.mongodb.net/test?appName=Cluster0)
+Frontend → Vercel 
+Backend → Vercel 
+Database → MongoDB Atlas
 ✨ Features:
 🔐 Authentication & Authorization:
 1.JWT-based signup/login
