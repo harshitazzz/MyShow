@@ -32,4 +32,5 @@ Frontend → https://frontend-my-show.vercel.app
 Backend → https://my-show-eta.vercel.app
 Database → mongodb+srv://users:HMzzz123@cluster0.vp12ti0.mongodb.net/test?appName=Cluster0
 👩‍💻 Author:
-Harshita(Computer Science Engineering Student)
+Harshita
+Computer Science Engineering Student
