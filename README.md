@@ -29,7 +29,7 @@ Database → MongoDB Atlas
 5.Pagination for large lists
 🌐 Hosting Links:
 Frontend → https://frontend-my-show.vercel.app
-Backend → https://my-show-eta.vercel.app
+Backend → https://myshow-hbc8.onrender.com
 Database → mongodb+srv://users:HMzzz123@cluster0.vp12ti0.mongodb.net/test?appName=Cluster0
 👩‍💻 Author:
 Harshita
