@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }) => {
 
   // helper that calls backend login endpoint and signs in on success
   const login = async ({ email, password }) => {
-    const res = await fetch('https://my-show-eta.vercel.app/auth/login', {
+    const res = await fetch('https://myshow-hbc8.onrender.com/auth/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password })
@@ -49,7 +49,7 @@ export const AuthProvider = ({ children }) => {
 
   // helper that calls backend signup endpoint and signs in on success
   const signup = async ({ username, email, password }) => {
-    const res = await fetch('https://my-show-eta.vercel.app/auth/signup', {
+    const res = await fetch('https://myshow-hbc8.onrender.com/auth/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ username, email, password })
