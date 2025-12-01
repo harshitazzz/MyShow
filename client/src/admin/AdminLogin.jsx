@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import axios from 'axios'
 import toast from 'react-hot-toast'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 
 const AdminLogin = () => {
   const [email, setEmail] = useState('')
@@ -32,13 +32,17 @@ const AdminLogin = () => {
       <form className='bg-gray-800 p-8 w-96 rounded' onSubmit={loginAdmin}>
         <h2 className='text-2xl mb-4 text-center'>Admin Login</h2>
 
-        <input type="email" value={email} onChange={(e)=>setEmail(e.target.value)} placeholder="Email"
-          className='w-full p-3 bg-gray-700 rounded mb-3'/>
+        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email"
+          className='w-full p-3 bg-gray-700 rounded mb-3' />
 
-        <input type="password"value={password}onChange={(e)=>setPassword(e.target.value)} placeholder="Password"
-          className='w-full p-3 bg-gray-700 rounded mb-3'/>
+        <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password"
+          className='w-full p-3 bg-gray-700 rounded mb-3' />
 
         <button className='w-full bg-red-600 py-2 rounded mt-2'>Login</button>
+
+        <p className='mt-4 text-center text-gray-400'>
+          New Admin? <Link to="/admin/signup" className='text-red-500'>Signup</Link>
+        </p>
       </form>
     </div>
   )

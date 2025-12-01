@@ -8,9 +8,13 @@ import Login from './pages/Login'
 import Signup from './pages/Signup'
 import Movies from './pages/Movies'
 import Favourite from './pages/Favourite'
+import MovieDetails from './pages/MovieDetails'
+import SeatLayout from './pages/SeatLayout'
+import MyBookings from './pages/MyBookings'
 
 // ⭐ ADMIN PAGES
 import AdminLogin from './admin/AdminLogin'
+import AdminSignup from './admin/AdminSignup'
 import AdminDashboard from './admin/AdminDashboard'
 import AdminMovies from './admin/AdminMovies'
 import AdminAddMovie from './admin/AdminAddMovie'
@@ -46,6 +50,7 @@ const Inner = () => {
 
         {/* ADMIN ROUTES */}
         <Route path='/admin/login' element={<AdminLogin />} />
+        <Route path='/admin/signup' element={<AdminSignup />} />
         <Route path='/admin' element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
           <Route path='movies' element={<AdminMovies />} />
@@ -60,9 +65,7 @@ const Inner = () => {
 }
 
 const App = () => (
-  <AuthProvider>
-    <Inner />
-  </AuthProvider>
+  <Inner />
 )
 
 export default App
