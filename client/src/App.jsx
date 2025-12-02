@@ -20,7 +20,9 @@ import AdminMovies from './admin/AdminMovies'
 import AdminAddMovie from './admin/AdminAddMovie'
 import AdminEditMovie from './admin/AdminEditMovie'
 import AdminLayout from './admin/AdminLayout'
-
+import AdminTheatres from './admin/AdminTheatres'
+import AdminAddTheatre from './admin/AdminAddTheatre'
+import AdminEditTheatre from './admin/AdminEditTheatre'
 // ⭐ AUTH CONTEXT
 import { AuthProvider } from './context/AuthContext'
 
@@ -56,6 +58,9 @@ const Inner = () => {
           <Route path='movies' element={<AdminMovies />} />
           <Route path='movies/add' element={<AdminAddMovie />} />
           <Route path='movies/edit/:id' element={<AdminEditMovie />} />
+          <Route path='theatres' element={<AdminTheatres />} />
+          <Route path='theatres/add' element={<AdminAddTheatre />} />
+          <Route path='theatres/edit/:id' element={<AdminEditTheatre />} />
         </Route>
       </Routes>
 

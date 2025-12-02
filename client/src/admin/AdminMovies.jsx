@@ -1,78 +1,67 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
-import { Link } from 'react-router-dom'
-import toast from 'react-hot-toast'
+import React, { useEffect, useState } from 'react';
+import API from '../libs/api';
+import { Link, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const AdminMovies = () => {
-  const [movies, setMovies] = useState([])
+  const [movies, setMovies] = useState([]);
+  const navigate = useNavigate();
 
   const fetchMovies = async () => {
-    const token = localStorage.getItem('adminToken')
-    if (!token) return
-
     try {
-      const res = await axios.get('http://localhost:8080/admin/movies', {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-      setMovies(res.data.movies)
+      const res = await API.get('/admin/movies');
+      if (res.data.success) setMovies(res.data.movies);
     } catch (err) {
-      console.error(err)
+      console.error(err);
+      toast.error('Failed to fetch movies');
     }
-  }
+  };
 
   const deleteMovie = async (id) => {
-    const token = localStorage.getItem('adminToken')
-    if (!token) return toast.error("Not authenticated")
-
+    if (!confirm('Delete this movie?')) return;
     try {
-      await axios.delete(`http://localhost:8080/admin/movies/${id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-      toast.success("Movie deleted")
-      fetchMovies()
+      await API.delete(`/admin/movies/${id}`);
+      toast.success('Movie deleted');
+      fetchMovies();
     } catch (err) {
-      toast.error("Delete failed")
+      console.error(err);
+      toast.error('Delete failed');
     }
-  }
+  };
 
-  useEffect(() => { fetchMovies() }, [])
+  useEffect(() => {
+    fetchMovies();
+  }, []);
 
   return (
     <div>
-      <h1 className='text-3xl font-bold mb-6'>All Movies</h1>
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold">All Movies</h2>
+        <Link to="/admin/movies/add" className="bg-red-600 px-4 py-2 rounded hover:bg-red-700">Add Movie</Link>
+      </div>
 
-      <table className='w-full bg-gray-800 rounded'>
-        <thead>
-          <tr className='text-left bg-gray-700'>
-            <th className='p-3'>Image</th>
-            <th className='p-3'>Trailer</th>
-            <th className='p-3'>Movie-Name</th>
-            <th className='p-3'>Genre</th>
-            <th className='p-3'>Actions</th>
-          </tr>
-        </thead>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {movies.map(m => (
+          <div key={m._id} className="bg-gray-800 rounded-lg shadow overflow-hidden hover:scale-105 transition">
+            <img src={m.imageUrl} alt={m.movieName} className="w-full h-56 object-cover" />
+            <div className="p-4">
+              <h3 className="text-lg font-semibold">{m.movieName}</h3>
+              <p className="text-sm text-gray-400">{m.genre} • {m.releaseYear}</p>
+              <div className="flex items-center justify-between mt-4">
+                <span className="text-yellow-400 font-semibold">★ {m.imdbRating}</span>
+                <div className="flex gap-2">
+                  <button onClick={() => navigate(`/admin/movies/edit/${m._id}`)} className="text-yellow-400">Edit</button>
+                  <button onClick={() => deleteMovie(m._id)} className="text-red-400">Delete</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
 
-        <tbody>
-          {movies.map(m => (
-            <tr key={m._id} className='border-b border-gray-700'>
-              <td><img src={m.imageUrl} className='h-20 w-16 object-cover' /></td>
-              <td className="p-3 text-xs text-blue-400 underline">
-  <a href={m.trailerUrl} target="_blank" rel="noopener noreferrer">
-    Watch Trailer
-  </a>
-</td>
-              <td className='p-3'>{m.movieName}</td>
-              <td className='p-3'>{m.genre}</td>
-              <td className='p-3 flex gap-4'>
-                <Link to={`/admin/movies/edit/${m._id}`} className='text-yellow-400'>Edit</Link>
-                <button className='text-red-400' onClick={() => deleteMovie(m._id)}>Delete</button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {movies.length === 0 && <p className="text-gray-400 mt-6">No movies yet.</p>}
     </div>
-  )
-}
+  );
+};
 
-export default AdminMovies
+export default AdminMovies;

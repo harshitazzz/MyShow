@@ -68,9 +68,39 @@ const deleteMovie = async (req, res) => {
 };
 
 // Public (user) gets movies with filters + pagination
+// const getMoviesPublic = async (req, res) => {
+//   try {
+//     let { page = 1, genre, year, minRating, sortBy } = req.query;
+//     page = parseInt(page, 10) || 1;
+//     const limit = 10;
+//     const skip = (page - 1) * limit;
+
+//     const query = {};
+//     if (genre) query.genre = genre;
+//     if (year) query.releaseYear = parseInt(year, 10);
+//     if (minRating) query.imdbRating = { $gte: parseFloat(minRating) };
+
+//     let q = MovieModel.find(query);
+
+//     // Sorting
+//     if (sortBy === 'rating') q = q.sort({ imdbRating: -1 });
+//     else if (sortBy === 'newest') q = q.sort({ releaseYear: -1 });
+//     else q = q.sort({ createdAt: -1 });
+
+//     const total = await MovieModel.countDocuments(query);
+//     const movies = await q.skip(skip).limit(limit).exec();
+
+//     res.status(200).json({ success: true, page, perPage: limit, totalPages: Math.ceil(total / limit), total, movies });
+//   } catch (err) {
+//     console.error('Get movies public error:', err);
+//     res.status(500).json({ message: 'Internal Server Error', success: false });
+//   }
+// };
+// Controllers/MovieController.js
+
 const getMoviesPublic = async (req, res) => {
   try {
-    let { page = 1, genre, year, minRating, sortBy } = req.query;
+    let { page = 1, genre, year, minRating, sortBy, search } = req.query;
     page = parseInt(page, 10) || 1;
     const limit = 10;
     const skip = (page - 1) * limit;
@@ -79,6 +109,7 @@ const getMoviesPublic = async (req, res) => {
     if (genre) query.genre = genre;
     if (year) query.releaseYear = parseInt(year, 10);
     if (minRating) query.imdbRating = { $gte: parseFloat(minRating) };
+    if (search) query.movieName = { $regex: search, $options: 'i' }; // <-- search support
 
     let q = MovieModel.find(query);
 
@@ -90,7 +121,14 @@ const getMoviesPublic = async (req, res) => {
     const total = await MovieModel.countDocuments(query);
     const movies = await q.skip(skip).limit(limit).exec();
 
-    res.status(200).json({ success: true, page, perPage: limit, totalPages: Math.ceil(total / limit), total, movies });
+    res.status(200).json({
+      success: true,
+      page,
+      perPage: limit,
+      totalPages: Math.ceil(total / limit),
+      total,
+      movies
+    });
   } catch (err) {
     console.error('Get movies public error:', err);
     res.status(500).json({ message: 'Internal Server Error', success: false });

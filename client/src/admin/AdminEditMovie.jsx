@@ -1,81 +1,65 @@
-import React, { useEffect, useState } from 'react'
-import { useParams, useNavigate } from 'react-router-dom'
-import axios from 'axios'
-import toast from 'react-hot-toast'
+import React, { useEffect, useState } from 'react';
+import API from '../libs/api';
+import { useParams, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const AdminEditMovie = () => {
-  const { id } = useParams()
+  const { id } = useParams();
+  const navigate = useNavigate();
   const [form, setForm] = useState({
-    movieName: "",
-    trailerUrl: "",
-    imageUrl: "",
-    imdbRating: "",
-    genre: "",
-    releaseYear: ""
-  })
-  const navigate = useNavigate()
+    movieName: '',
+    trailerUrl: '',
+    imageUrl: '',
+    imdbRating: '',
+    genre: '',
+    releaseYear: ''
+  });
 
   useEffect(() => {
-    const token = localStorage.getItem('adminToken')
-    if (!token) return navigate('/admin/login')
-
-    axios.get(`http://localhost:8080/admin/movies/${id}`, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-      .then(res => {
-        const m = res.data.movie
-        setForm({
-          movieName: m.movieName || "",
-          trailerUrl: m.trailerUrl || "",
-          imageUrl: m.imageUrl || "",
-          imdbRating: m.imdbRating || "",
-          genre: m.genre || "",
-          releaseYear: m.releaseYear || ""
-        })
-      })
-      .catch(err => toast.error("Failed to fetch movie"))
-  }, [id])
+    const fetchMovie = async () => {
+      try {
+        const res = await API.get(`/admin/movies/${id}`);
+        if (res.data.success) setForm(res.data.movie);
+      } catch (err) {
+        toast.error('Failed to load movie');
+      }
+    };
+    fetchMovie();
+  }, [id]);
 
   const updateMovie = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-      const token = localStorage.getItem('adminToken')
-      if (!token) return toast.error("Not authenticated")
+      const payload = { ...form };
+      if (payload.imdbRating) payload.imdbRating = Number(payload.imdbRating);
+      if (payload.releaseYear) payload.releaseYear = Number(payload.releaseYear);
 
-      const payload = { ...form }
-      if (payload.imdbRating) payload.imdbRating = Number(payload.imdbRating)
-      if (payload.releaseYear) payload.releaseYear = Number(payload.releaseYear)
-
-      const res = await axios.put(`http://localhost:8080/admin/movies/${id}`, payload, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-
+      const res = await API.put(`/admin/movies/${id}`, payload);
       if (res.data.success) {
-        toast.success("Movie Updated")
-        navigate('/admin/movies')
-      } else {
-        toast.error(res.data.message)
-      }
+        toast.success('Updated');
+        navigate('/admin/movies');
+      } else toast.error(res.data.message || 'Update failed');
     } catch (err) {
-      toast.error("Update failed")
+      toast.error('Update failed');
     }
-  }
+  };
 
   return (
-    <div className='max-w-xl'>
-      <h1 className='text-2xl mb-4 font-bold'>Edit Movie</h1>
-      <form className='flex flex-col gap-4' onSubmit={updateMovie}>
-        <input value={form.movieName} onChange={(e) => setForm({ ...form, movieName: e.target.value })} placeholder="Movie Name" className='p-3 bg-gray-800 rounded' />
-        <input value={form.imageUrl} onChange={(e) => setForm({ ...form, imageUrl: e.target.value })} placeholder="Image URL" className='p-3 bg-gray-800 rounded' />
-        <input value={form.trailerUrl} onChange={(e) => setForm({ ...form, trailerUrl: e.target.value })} placeholder="Trailer URL" className='p-3 bg-gray-800 rounded' />
-        <input value={form.genre} onChange={(e) => setForm({ ...form, genre: e.target.value })} placeholder="Genre" className='p-3 bg-gray-800 rounded' />
-        <input type="number" value={form.imdbRating} onChange={(e) => setForm({ ...form, imdbRating: e.target.value })} placeholder="IMDb Rating (0-10)" className='p-3 bg-gray-800 rounded' />
-        <input type="number" value={form.releaseYear} onChange={(e) => setForm({ ...form, releaseYear: e.target.value })} placeholder="Release Year" className='p-3 bg-gray-800 rounded' />
-
-        <button className='bg-red-600 py-2 rounded'>Update</button>
+    <div className="max-w-2xl">
+      <h2 className="text-2xl font-bold mb-4">Edit Movie</h2>
+      <form className="space-y-3" onSubmit={updateMovie}>
+        <input value={form.movieName} onChange={e => setForm({ ...form, movieName: e.target.value })} placeholder="Movie Name" className="w-full p-3 bg-gray-800 rounded" />
+        <input value={form.imageUrl} onChange={e => setForm({ ...form, imageUrl: e.target.value })} placeholder="Image URL" className="w-full p-3 bg-gray-800 rounded" />
+        <input value={form.trailerUrl} onChange={e => setForm({ ...form, trailerUrl: e.target.value })} placeholder="Trailer URL" className="w-full p-3 bg-gray-800 rounded" />
+        <input value={form.genre} onChange={e => setForm({ ...form, genre: e.target.value })} placeholder="Genre" className="w-full p-3 bg-gray-800 rounded" />
+        <div className="grid grid-cols-2 gap-3">
+          <input type="number" value={form.imdbRating} onChange={e => setForm({ ...form, imdbRating: e.target.value })} placeholder="IMDb Rating" className="p-3 bg-gray-800 rounded" />
+          <input type="number" value={form.releaseYear} onChange={e => setForm({ ...form, releaseYear: e.target.value })} placeholder="Release Year" className="p-3 bg-gray-800 rounded" />
+        </div>
+        <button className="bg-red-600 px-4 py-2 rounded">Update Movie</button>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default AdminEditMovie
+export default AdminEditMovie;
