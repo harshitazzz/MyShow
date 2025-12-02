@@ -11,7 +11,7 @@ import Favourite from './pages/Favourite'
 import MovieDetails from './pages/MovieDetails'
 import SeatLayout from './pages/SeatLayout'
 import MyBookings from './pages/MyBookings'
-
+import Theatres from './pages/Theatres'
 // ⭐ ADMIN PAGES
 import AdminLogin from './admin/AdminLogin'
 import AdminSignup from './admin/AdminSignup'
@@ -49,7 +49,7 @@ const Inner = () => {
         <Route path='/movies/:id/:date' element={<SeatLayout />} />
         <Route path='/my-bookings' element={<MyBookings />} />
         <Route path='/favourite' element={<Favourite />} />
-
+        <Route path='/theatres' element={<Theatres />} />
         {/* ADMIN ROUTES */}
         <Route path='/admin/login' element={<AdminLogin />} />
         <Route path='/admin/signup' element={<AdminSignup />} />
