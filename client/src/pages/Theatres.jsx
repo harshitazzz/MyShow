@@ -1,13 +1,13 @@
 // src/pages/UserTheatres.jsx
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import API from "../libs/api";
 
 const Theatres = () => {
   const [theatres, setTheatres] = useState([]);
 
   const fetchTheatres = async () => {
     try {
-      const { data } = await axios.get("http://localhost:8080/theatres"); // PUBLIC API
+      const { data } = await API.get("/theatres"); // PUBLIC API
       setTheatres(data.theatres);
     } catch (err) {
       console.error(err);

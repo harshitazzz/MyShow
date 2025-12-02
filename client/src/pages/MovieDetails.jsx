@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import API from "../libs/api";
 
 const MovieDetails = () => {
   const { id } = useParams();
@@ -9,8 +10,8 @@ const MovieDetails = () => {
 
   const fetchMovie = async () => {
     try {
-      const response = await fetch(`http://localhost:8080/movies/${id}`);
-      const data = await response.json();
+      const response = await API.get(`/movies/${id}`);
+      const data = response.data;
       if (data.success) setMovie(data.movie);
     } catch (err) {
       console.error("Error fetching movie:", err);

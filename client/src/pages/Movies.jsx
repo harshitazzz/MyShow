@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import API from '../libs/api';
 
 const Movies = () => {
   const [movies, setMovies] = useState([]);
@@ -21,7 +21,7 @@ const Movies = () => {
   const fetchMovies = async (overrideFilters) => {
     try {
       const params = overrideFilters || { page, ...filters };
-      const res = await axios.get('http://localhost:8080/movies', { params });
+      const res = await API.get('/movies', { params });
       if (res.data.success) {
         setMovies(res.data.movies);
         setTotalPages(res.data.totalPages);
@@ -43,7 +43,7 @@ const Movies = () => {
 
     const fetchAutocomplete = async () => {
       try {
-        const res = await axios.get('http://localhost:8080/movies', {
+        const res = await API.get('/movies', {
           params: { search: filters.search, page: 1 }
         });
         if (res.data.success) {
