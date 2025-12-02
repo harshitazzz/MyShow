@@ -6,5 +6,6 @@ const router = express.Router();
 
 // Public endpoint: GET /movies?page=1&genre=Action&year=2020&minRating=7&sortBy=rating
 router.get('/', getMoviesPublic);
+router.get('/:id', require('../Controllers/MovieController').getMovieById);
 
 module.exports = router;

@@ -27,6 +27,19 @@ const getMoviesAdmin = async (req, res) => {
   }
 };
 
+// Get single movie by ID
+const getMovieById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const movie = await MovieModel.findById(id);
+    if (!movie) return res.status(404).json({ message: 'Movie not found', success: false });
+    res.status(200).json({ success: true, movie });
+  } catch (err) {
+    console.error('Get movie by id error:', err);
+    res.status(500).json({ message: 'Internal Server Error', success: false });
+  }
+};
+
 // Admin updates a movie
 const updateMovie = async (req, res) => {
   try {
@@ -84,4 +97,4 @@ const getMoviesPublic = async (req, res) => {
   }
 };
 
-module.exports = { addMovie, getMoviesAdmin, updateMovie, deleteMovie, getMoviesPublic };
+module.exports = { addMovie, getMoviesAdmin, updateMovie, deleteMovie, getMoviesPublic, getMovieById };
